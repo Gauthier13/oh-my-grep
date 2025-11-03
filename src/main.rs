@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::{env, fs, process};
 
 fn main() {
@@ -11,7 +12,10 @@ fn main() {
     println!("Searching for {}", config.query);
     println!("In file {}", config.file_path);
 
-    run(config)
+    if let Err(e) = run(config) {
+        println!("Application error: {e}");
+        process::exit(1);
+    }
 }
 
 struct Config {
@@ -22,6 +26,7 @@ struct Config {
 impl Config {
     /**
      *@description Parse the config from user input
+     *@error return an error if inputs are missings
      */
     fn build(args: &[String]) -> Result<Config, &'static str> {
         if args.len() < 3 {
@@ -35,12 +40,13 @@ impl Config {
     }
 }
 
-fn run(config: Config) {
-    // Permet de lire le fichier passé en argument.
-    // Expect est du type Result<T,E> et la string passé en argument permet de gérer l'erreur si le
-    // fichier passé n'existe pas
-    let contents =
-        fs::read_to_string(config.file_path).expect("Should have been able to read the file");
+/**
+* @description read the file passed from the config input
+*/
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.file_path)?;
 
     println!("With text:\n{contents}");
+
+    Ok(())
 }
