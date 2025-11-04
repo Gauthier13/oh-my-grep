@@ -28,9 +28,9 @@ struct Config {
 
 impl Config {
     /**
-     *@description Parse the config from user input
-     *@error return an error if inputs are missings
-     */
+    @description Parse the config from user input
+    @error return an error if inputs are missings
+    */
     fn build(args: &[String]) -> Result<Config, &'static str> {
         if args.len() < 3 {
             return Err("Missing arguments");
@@ -49,7 +49,7 @@ impl Config {
 }
 
 /**
-* @description read the file passed from the config input
+@description read the file passed from the config input
 */
 fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
